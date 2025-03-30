@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "685491922242",
+    "project_id": "hand2help-bce03",
+    "storage_bucket": "hand2help-bce03.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:685491922242:android:7e6bdb1a855c99713ad4db",
+        "android_client_info": {
+          "package_name": "com.example.hand2help"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "685491922242-eoc82jud6rbore839t6f8pnbvqsn28gf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hand2help",
+            "certificate_hash": "ad3f9ce882e6b7193206568e108fb704ffac9d99"
+          }
+        },
+        {
+          "client_id": "685491922242-88tb7q92cn953jc97b79ikhk0fgenag6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLmvb62-5IggvYriIvtwK6ZFtyo3zlooc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "685491922242-88tb7q92cn953jc97b79ikhk0fgenag6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
