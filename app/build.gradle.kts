@@ -67,4 +67,6 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     implementation("androidx.activity:activity-compose:1.7.2")
+
+    implementation("com.google.android.gms:play-services-wallet:19.2.0")
 }
