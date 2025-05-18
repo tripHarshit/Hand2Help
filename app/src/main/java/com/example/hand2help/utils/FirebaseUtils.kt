@@ -1,29 +1,35 @@
 package com.example.hand2help.utils
 
-
-import com.example.hand2help.models.Donation
+import android.util.Log
 import com.example.hand2help.models.Transaction
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 object FirebaseUtils {
-    val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
-    val firestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
+    private val db = FirebaseFirestore.getInstance()
 
-    // Function to get current user
-    fun getCurrentUser() = auth.currentUser
-
-    // Save donation to Firestore
-    fun saveDonation(donation: Donation, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-        firestore.collection("donations").add(donation)
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onFailure(it) }
+    fun saveTransaction(transaction: Transaction) {
+        db.collection("transactions")
+            .document(transaction.transactionId)
+            .set(transaction)
+            .addOnSuccessListener {
+                Log.d("Firebase", "Transaction saved successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firebase", "Error saving transaction", e)
+            }
     }
 
-    // Save transaction to Firestore
-    fun saveTransaction(transaction: Transaction, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-        firestore.collection("transactions").add(transaction)
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onFailure(it) }
+    fun getUserTransactions(userId: String, callback: (List<Transaction>) -> Unit) {
+        db.collection("transactions")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener { documents ->
+                val transactions = documents.map { it.toObject(Transaction::class.java) }
+                callback(transactions)
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firebase", "Error getting transactions", e)
+                callback(emptyList())
+            }
     }
 }

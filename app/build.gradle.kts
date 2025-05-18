@@ -67,6 +67,19 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("com.google.android.material:material:1.5.0")
 
-    implementation("com.google.android.gms:play-services-wallet:19.2.0")
+        implementation("com.android.billingclient:billing-ktx:6.0.1")
+        implementation("com.google.android.gms:play-services-wallet:19.4.0")
+        implementation("com.google.firebase:firebase-database-ktx:21.0.0")
+
+    // Google Pay API
+    implementation  ("com.google.android.gms:play-services-wallet:19.2.0")
+
+    dependencies {
+        implementation ("com.razorpay:checkout:1.6.33")
+    }
+
+
 }
+

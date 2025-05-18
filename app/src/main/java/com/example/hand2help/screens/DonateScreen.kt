@@ -1,81 +1,81 @@
 package com.example.hand2help.screens
 
-import android.app.Activity
-import android.content.Intent
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.hand2help.utils.FirebaseUtils
-import com.example.hand2help.utils.PaymentUtils
-import com.example.hand2help.models.Transaction
+import com.example.hand2help.MainActivity
 
 @Composable
-fun DonateScreen(navController: NavController, cause: String) {
-    var amount by remember { mutableStateOf("") }
-    var paymentResult by remember { mutableStateOf<String?>(null) }
+fun DonateScreen(
+    navController: NavController,
+    cause: String,
+    activity: MainActivity
+) {
+    var amount by remember { mutableStateOf("100") }
+    var isProcessing by remember { mutableStateOf(false) }
+    var showError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
 
-    val paymentLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.let {
-                paymentResult = PaymentUtils.handlePaymentResponse(it).toString()
-                if (paymentResult!!.contains("Success", ignoreCase = true)) {
-                    val transactionId = paymentResult!!.substringAfter("Txn ID: ").substringBefore(" ")
-                    saveTransactionToFirestore(transactionId, amount, cause, paymentResult!!)
-                    navController.navigate("success")
-                } else {
-                    paymentResult = "Payment Failed"
-                    navController.navigate("failure")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Donate to $cause",
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
+
+        OutlinedTextField(
+            value = amount,
+            onValueChange = {
+                if (it.isEmpty() || it.all { char -> char.isDigit() }) {
+                    amount = it
                 }
-            }
-        } else {
-            paymentResult = "Payment Failed"
-            navController.navigate("failure")
-        }
-    }
+            },
+            label = { Text("Enter Amount (INR)") },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 24.dp)
+        )
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text(text = "Donate for: $cause", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-        Spacer(modifier = Modifier.height(10.dp))
-        OutlinedTextField(value = amount, onValueChange = { amount = it }, label = { Text("Enter Amount") })
-        Spacer(modifier = Modifier.height(10.dp))
-        Button(onClick = { PaymentUtils.startUPIPayment(amount, "success@upi", "Hand2Help", paymentLauncher) }) {
-            Text("Donate via UPI")
+        Button(
+            onClick = {
+                Log.d("Razorpay", "Button clicked with amount: $amount")
+                if (amount.isNotEmpty() && amount.toIntOrNull() != null && amount.toInt() > 0) {
+                    isProcessing = true
+                    showError = false
+                    // Call Razorpay payment method
+                    activity.startRazorpayPayment(amount, cause)
+                } else {
+                    showError = true
+                    errorMessage = "Please enter a valid amount"
+                }
+            },
+            enabled = !isProcessing,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+        ) {
+            Text(text = "Donate Now")
         }
-        Spacer(modifier = Modifier.height(10.dp))
-        paymentResult?.let {
+
+        if (showError) {
             Text(
-                text = it,
-                color = if (it.contains("Success", ignoreCase = true)) Color.Green else Color.Red,
-                fontWeight = FontWeight.Bold
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(top = 8.dp)
             )
         }
     }
-}
-
-// Save Transaction to Firestore
-fun saveTransactionToFirestore(transactionId: String, amount: String, cause: String, status: String) {
-    val transaction = Transaction(
-        transactionId = transactionId,
-        name = FirebaseUtils.getCurrentUser()?.displayName ?: "Anonymous",
-        amount = amount,
-        cause = cause,
-        status = status
-    )
-
-    FirebaseUtils.saveTransaction(transaction,
-        onSuccess = { Log.d("Firestore", "Transaction saved successfully") },
-        onFailure = { Log.e("Firestore", "Error saving transaction", it) }
-    )
 }

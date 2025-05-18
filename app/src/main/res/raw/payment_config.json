@@ -1,0 +1,36 @@
+{
+  "apiVersion": 2,
+  "apiVersionMinor": 0,
+  "merchantInfo": {
+    "merchantName": "Hand2Help",
+    "merchantId": ""
+  },
+  "allowedPaymentMethods": [
+    {
+      "type": "UPI",
+      "parameters": {
+        "referenceUrlScheme": "hand2help"
+      }
+    },
+    {
+      "type": "CARD",
+      "parameters": {
+        "allowedAuthMethods": ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+        "allowedCardNetworks": ["MASTERCARD", "VISA", "RUPAY"]
+      },
+      "tokenizationSpecification": {
+        "type": "PAYMENT_GATEWAY",
+        "parameters": {
+          "gateway": "razorpay",
+          "gatewayMerchantId": "YOUR_RAZORPAY_MERCHANT_ID"
+        }
+      }
+    }
+  ],
+  "transactionInfo": {
+    "totalPrice": "100",
+    "totalPriceStatus": "FINAL",
+    "currencyCode": "INR",
+    "countryCode": "IN"
+  }
+}

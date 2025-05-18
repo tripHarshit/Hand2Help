@@ -12,23 +12,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
-fun SuccessScreen(navController: NavController) {
+fun SuccessScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "🎉 Payment Successful!",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Green
-        )
+        Text(text = "Donation Successful!")
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { navController.navigate("home") }) {
-            Text(text = "Back to Home")
+        Button(onClick = { /* Navigate back to home screen */ }) {
+            Text("Go Back")
         }
     }
 }

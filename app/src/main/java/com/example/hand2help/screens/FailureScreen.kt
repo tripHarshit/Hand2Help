@@ -12,23 +12,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
-fun FailureScreen(navController: NavController) {
+fun FailureScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "❌ Payment Failed!",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Red
-        )
+        Text(text = "Donation Failed!", )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { navController.navigate("home") }) {
-            Text(text = "Try Again")
+        Button(onClick = { /* Retry or Go back */ }) {
+            Text("Retry")
         }
     }
 }
+
